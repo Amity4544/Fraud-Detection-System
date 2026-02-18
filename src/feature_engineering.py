@@ -10,22 +10,11 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class FeatureEngineer:
     """Handles feature engineering for fraud detection"""
     
     @staticmethod
     def haversine_distance(lat1, lon1, lat2, lon2):
-        """
-        Calculate distance between two points using Haversine formula
-        
-        Args:
-            lat1, lon1: Customer coordinates
-            lat2, lon2: Merchant coordinates
-            
-        Returns:
-            Distance in kilometers
-        """
         R = 6371.0  # Earth radius in km
         
         lat1_rad = np.radians(lat1)
@@ -42,15 +31,6 @@ class FeatureEngineer:
         return R * c
     
     def engineer_features(self, df):
-        """
-        Create new features from existing columns
-        
-        Args:
-            df: Cleaned dataframe
-            
-        Returns:
-            Dataframe with new features
-        """
         logger.info("Engineering features...")
         
         df_featured = df.copy()

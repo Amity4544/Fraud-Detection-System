@@ -27,15 +27,6 @@ class Preprocessor:
         os.makedirs(self.models_dir, exist_ok=True)
     
     def prepare_train_data(self, df):
-        """
-        Prepare training data (fit and transform)
-        
-        Args:
-            df: Dataframe with engineered features
-            
-        Returns:
-            tuple: (X_train, y_train)
-        """
         logger.info("Preparing training data...")
         
         # Separate features and target
@@ -59,15 +50,6 @@ class Preprocessor:
         return X_scaled, y
     
     def prepare_test_data(self, df):
-        """
-        Prepare test data (transform only)
-        
-        Args:
-            df: Dataframe with engineered features
-            
-        Returns:
-            tuple: (X_test, y_test)
-        """
         logger.info("Preparing test data...")
         
         if self.encoder is None or self.scaler is None:

@@ -9,27 +9,14 @@ import logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class DataCleaner:
-    """Handles data cleaning and optimization"""
-    
     # Columns needed for modeling
     REQUIRED_COLUMNS = [
         'trans_date_trans_time', 'merchant', 'category', 'amt', 'gender',
         'city_pop', 'job', 'dob', 'lat', 'long', 'merch_lat', 'merch_long',
-        'is_fraud'
-    ]
+        'is_fraud']
     
     def clean_data(self, df):
-        """
-        Clean and optimize dataframe
-        
-        Args:
-            df: Raw dataframe from database
-            
-        Returns:
-            Cleaned dataframe
-        """
         logger.info("Cleaning data...")
         
         # Select required columns

@@ -1,7 +1,5 @@
 """
 Main Data Pipeline
-Runs: Extract → Clean → Engineer → Preprocess
-Saves: Preprocessed data as PKL files
 """
 
 import os

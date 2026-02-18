@@ -15,7 +15,6 @@ load_dotenv()
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-
 class DataLoader:
     """Handles data extraction from MySQL database"""
     
@@ -34,12 +33,6 @@ class DataLoader:
             raise ValueError("Database password not found. Set DB_PASSWORD in .env file")
     
     def load_train_test_data(self):
-        """
-        Load training and testing data from database
-        
-        Returns:
-            tuple: (train_df, test_df)
-        """
         logger.info("Connecting to MySQL database...")
         
         try:

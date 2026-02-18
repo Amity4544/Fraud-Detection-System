@@ -1,6 +1,5 @@
 """
-Flask API for Fraud Detection
-Real-time prediction system
+Flask API for Fraud Detection Real-time prediction system
 """
 
 from flask import Flask, request, jsonify
@@ -40,10 +39,6 @@ def load_model_and_transformers():
 
 
 def preprocess_transaction(transaction):
-    """
-    Preprocess transaction for prediction
-    Applies same transformations as training
-    """
     # Parse dates
     trans_time = pd.to_datetime(transaction['trans_date_trans_time'])
     dob = pd.to_datetime(transaction['dob'])
@@ -126,25 +121,7 @@ def health():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """
-    Predict fraud for a transaction
     
-    Request body should contain:
-    {
-        "trans_date_trans_time": "2024-01-15 14:30:00",
-        "merchant": "Amazon",
-        "category": "shopping_net",
-        "amt": 125.50,
-        "gender": "F",
-        "city_pop": 50000,
-        "job": "Software Developer",
-        "dob": "1990-05-15",
-        "lat": 40.7128,
-        "long": -74.0060,
-        "merch_lat": 40.7580,
-        "merch_long": -73.9855
-    }
-    """
     if model is None:
         return jsonify({'error': 'Model not loaded'}), 500
     

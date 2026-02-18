@@ -1,0 +1,35 @@
+# Environment Variables 
+.env 
+ 
+# Python 
+__pycache__/ 
+*.py[cod] 
+*$py.class 
+*.so 
+ 
+# Virtual Environment 
+venv/ 
+env/ 
+fraud_env/ 
+ 
+# Data files 
+data/ 
+*.pkl 
+*.csv 
+ 
+# Models 
+models/ 
+ 
+# Results 
+results/ 
+ 
+# IDEs 
+.vscode/ 
+.idea/ 
+ 
+# OS 
+.DS_Store 
+Thumbs.db 
+ 
+# Logs 
+*.log 

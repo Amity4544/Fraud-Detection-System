@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraud Detection System</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .main-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border: none;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-label i {
+            color: #667eea;
+        }
+        
+        .form-control, .form-select {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.15);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-predict {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            width: 100%;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-predict:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+        
+        .btn-predict:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            animation: slideIn 0.5s ease;
+            display: none;
+        }
+        
+        .result-safe {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+        }
+        
+        .result-fraud {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+        
+        .result-box h4 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .result-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .result-item label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .result-item value {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .spinner {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+            color: #667eea;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .info-badge {
+            display: inline-block;
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Header -->
+        <div class="header">
+            <h1><i class="fas fa-shield-alt"></i> Fraud Detection System</h1>
+            <p>Advanced ML-powered transaction analysis</p>
+        </div>
+        
+        <!-- Main Card -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-credit-card"></i> Transaction Details</h3>
+            </div>
+            
+            <div class="card-body">
+                <form id="fraudForm">
+                    <!-- Row 1 -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-calendar-alt"></i>
+                                Transaction Date & Time
+                            </label>
+                            <input type="datetime-local" class="form-control" id="trans_date_trans_time" required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-dollar-sign"></i>
+                                Amount
+                            </label>
+                            <input type="number" class="form-control" id="amt" step="0.01" placeholder="125.50" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 2 -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-store"></i>
+                                Merchant
+                            </label>
+                            <input type="text" class="form-control" id="merchant" placeholder="Amazon" required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-tag"></i>
+                                Category
+                            </label>
+                            <select class="form-select" id="category" required>
+                                <option value="">Select Category</option>
+                                <option value="shopping_net">Online Shopping</option>
+                                <option value="shopping_pos">In-Store Shopping</option>
+                                <option value="grocery_pos">Grocery</option>
+                                <option value="gas_transport">Gas & Transport</option>
+                                <option value="entertainment">Entertainment</option>
+                                <option value="food_dining">Food & Dining</option>
+                                <option value="health_fitness">Health & Fitness</option>
+                                <option value="travel">Travel</option>
+                                <option value="personal_care">Personal Care</option>
+                                <option value="kids_pets">Kids & Pets</option>
+                                <option value="home">Home</option>
+                                <option value="misc_net">Miscellaneous Online</option>
+                                <option value="misc_pos">Miscellaneous In-Store</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 3 -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-user"></i>
+                                Gender
+                            </label>
+                            <select class="form-select" id="gender" required>
+                                <option value="">Select Gender</option>
+                                <option value="M">Male</option>
+                                <option value="F">Female</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-briefcase"></i>
+                                Job
+                            </label>
+                            <input type="text" class="form-control" id="job" placeholder="Software Developer" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 4 -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-birthday-cake"></i>
+                                Date of Birth
+                            </label>
+                            <input type="date" class="form-control" id="dob" required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-city"></i>
+                                City Population
+                            </label>
+                            <input type="number" class="form-control" id="city_pop" placeholder="50000" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 5: Location -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Customer Latitude
+                            </label>
+                            <input type="number" class="form-control" id="lat" step="0.0001" placeholder="40.7128" required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Customer Longitude
+                            </label>
+                            <input type="number" class="form-control" id="long" step="0.0001" placeholder="-74.0060" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Row 6: Merchant Location -->
+                    <div class="form-row">
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-store-alt"></i>
+                                Merchant Latitude
+                            </label>
+                            <input type="number" class="form-control" id="merch_lat" step="0.0001" placeholder="40.7580" required>
+                        </div>
+                        
+                        <div>
+                            <label class="form-label">
+                                <i class="fas fa-store-alt"></i>
+                                Merchant Longitude
+                            </label>
+                            <input type="number" class="form-control" id="merch_long" step="0.0001" placeholder="-73.9855" required>
+                        </div>
+                    </div>
+                    
+                    <div class="info-badge">
+                        <i class="fas fa-info-circle"></i> All fields are required for accurate prediction
+                    </div>
+                    
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn-predict mt-4">
+                        <i class="fas fa-search"></i> Check Transaction
+                    </button>
+                </form>
+                
+                <!-- Loading Spinner -->
+                <div class="spinner" id="spinner">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Analyzing transaction...</p>
+                </div>
+                
+                <!-- Result Box -->
+                <div class="result-box" id="resultBox">
+                    <h4 id="resultTitle"></h4>
+                    <p id="resultMessage"></p>
+                    
+                    <div class="result-details">
+                        <div class="result-item">
+                            <label>Fraud Probability</label>
+                            <value id="probability">--</value>
+                        </div>
+                        <div class="result-item">
+                            <label>Risk Level</label>
+                            <value id="riskLevel">--</value>
+                        </div>
+                        <div class="result-item">
+                            <label>Transaction Amount</label>
+                            <value id="amount">--</value>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        document.getElementById('fraudForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                trans_date_trans_time: document.getElementById('trans_date_trans_time').value.replace('T', ' '),
+                merchant: document.getElementById('merchant').value,
+                category: document.getElementById('category').value,
+                amt: parseFloat(document.getElementById('amt').value),
+                gender: document.getElementById('gender').value,
+                city_pop: parseInt(document.getElementById('city_pop').value),
+                job: document.getElementById('job').value,
+                dob: document.getElementById('dob').value,
+                lat: parseFloat(document.getElementById('lat').value),
+                long: parseFloat(document.getElementById('long').value),
+                merch_lat: parseFloat(document.getElementById('merch_lat').value),
+                merch_long: parseFloat(document.getElementById('merch_long').value)
+            };
+            
+            // Show loading
+            document.getElementById('resultBox').style.display = 'none';
+            document.getElementById('spinner').style.display = 'block';
+            document.querySelector('.btn-predict').disabled = true;
+            
+            try {
+                // Call API
+                const response = await fetch('http://127.0.0.1:5000/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+                
+                const result = await response.json();
+                
+                // Hide loading
+                document.getElementById('spinner').style.display = 'none';
+                document.querySelector('.btn-predict').disabled = false;
+                
+                if (result.success) {
+                    // Show result
+                    const prediction = result.prediction;
+                    const resultBox = document.getElementById('resultBox');
+                    
+                    if (prediction.is_fraud) {
+                        resultBox.className = 'result-box result-fraud';
+                        document.getElementById('resultTitle').innerHTML = '<i class="fas fa-exclamation-triangle"></i> FRAUD DETECTED!';
+                        document.getElementById('resultMessage').textContent = 'This transaction shows high risk indicators. Please review carefully.';
+                    } else {
+                        resultBox.className = 'result-box result-safe';
+                        document.getElementById('resultTitle').innerHTML = '<i class="fas fa-check-circle"></i> Transaction Safe';
+                        document.getElementById('resultMessage').textContent = 'This transaction appears legitimate and secure.';
+                    }
+                    
+                    document.getElementById('probability').textContent = (prediction.fraud_probability * 100).toFixed(2) + '%';
+                    document.getElementById('riskLevel').textContent = prediction.risk_level;
+                    document.getElementById('amount').textContent = '$' + prediction.amount.toFixed(2);
+                    
+                    resultBox.style.display = 'block';
+                } else {
+                    alert('Error: ' + result.error);
+                }
+            } catch (error) {
+                document.getElementById('spinner').style.display = 'none';
+                document.querySelector('.btn-predict').disabled = false;
+                alert('Error connecting to API: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
